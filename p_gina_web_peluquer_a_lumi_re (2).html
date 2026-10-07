@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMIÈRE | Especialistas en Hair Styling & Color Femenino</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        champagne: {
+                            100: '#FAF6F0',
+                            200: '#F5EBE1',
+                            300: '#EBD9C8',
+                            400: '#D1B499',
+                            500: '#B8906F',
+                        },
+                        nude: {
+                            100: '#FDFBF9',
+                            200: '#F9F3EE',
+                            300: '#F2E5DC',
+                            400: '#E2CEC0',
+                            500: '#C7927C',
+                            800: '#4A342B',
+                            900: '#2C1E18'
+                        },
+                        rose: {
+                            100: '#FCF3F2',
+                            200: '#F8E4E1',
+                            300: '#ECC0B9',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #B8906F 0%, #C7927C 50%, #8E5B47 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .luxury-bg-gradient {
+            background: linear-gradient(135deg, #C7927C 0%, #B8906F 100%);
+        }
+        .bg-glass {
+            background: rgba(253, 251, 249, 0.92);
+            backdrop-filter: blur(12px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #F9F3EE;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #C7927C;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-nude-100 text-nude-900 font-sans antialiased custom-scrollbar">
+
+    <!-- Header / Navbar -->
+    <header class="fixed top-0 left-0 w-full z-40 transition-all duration-300 bg-glass border-b border-nude-300/60 shadow-sm" id="main-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="#inicio" class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full border-2 border-nude-500 bg-rose-100 flex items-center justify-center">
+                        <i class="fa-serif font-serif text-nude-800 text-xl font-bold">L</i>
+                    </div>
+                    <div>
+                        <span class="font-serif text-2xl font-bold tracking-widest text-nude-900 block leading-none">LUMIÈRE</span>
+                        <span class="text-[9px] tracking-[0.25em] text-nude-500 uppercase font-medium">Hair & Color Studio</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex items-center space-x-8 text-xs uppercase tracking-widest font-semibold text-nude-800">
+                    <a href="#inicio" class="hover:text-nude-500 transition-colors">Inicio</a>
+                    <a href="#servicios" class="hover:text-nude-500 transition-colors">Servicios & Mechas</a>
+                    <a href="#productos" class="hover:text-nude-500 transition-colors">Cuidado Capilar</a>
+                    <a href="#galeria" class="hover:text-nude-500 transition-colors">Galería de Looks</a>
+                    <a href="#contacto" class="hover:text-nude-500 transition-colors">Ubicación</a>
+                </nav>
+
+                <!-- Action Buttons -->
+                <div class="hidden md:flex items-center space-x-5">
+                    <!-- Cart Button -->
+                    <button id="cart-btn" onclick="toggleCartModal()" class="relative p-2 text-nude-800 hover:text-nude-500 transition-colors">
+                        <i class="fa-solid fa-bag-shopping text-xl"></i>
+                        <span id="cart-count" class="absolute -top-1 -right-1 bg-nude-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow">0</span>
+                    </button>
+
+                    <!-- Reservation CTA -->
+                    <a href="#reserva" class="luxury-bg-gradient text-white font-semibold px-6 py-2.5 rounded-full shadow-md hover:shadow-lg hover:opacity-95 transition-all text-xs uppercase tracking-widest">
+                        Reservar Cita
+                    </a>
+                </div>
+
+                <!-- Mobile Menu & Cart Buttons -->
+                <div class="flex items-center space-x-3 md:hidden">
+                    <button onclick="toggleCartModal()" class="relative p-2 text-nude-800 hover:text-nude-500">
+                        <i class="fa-solid fa-bag-shopping text-xl"></i>
+                        <span id="cart-count-mobile" class="absolute -top-1 -right-1 bg-nude-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </button>
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="text-nude-800 hover:text-nude-500 focus:outline-none p-2">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-nude-100 border-b border-nude-300 px-4 pt-2 pb-6 space-y-3">
+            <a href="#inicio" onclick="toggleMobileMenu()" class="block py-2 text-nude-800 hover:text-nude-500 font-medium">Inicio</a>
+            <a href="#servicios" onclick="toggleMobileMenu()" class="block py-2 text-nude-800 hover:text-nude-500 font-medium">Servicios & Mechas</a>
+            <a href="#productos" onclick="toggleMobileMenu()" class="block py-2 text-nude-800 hover:text-nude-500 font-medium">Cuidado Capilar</a>
+            <a href="#galeria" onclick="toggleMobileMenu()" class="block py-2 text-nude-800 hover:text-nude-500 font-medium">Galería de Looks</a>
+            <a href="#contacto" onclick="toggleMobileMenu()" class="block py-2 text-nude-800 hover:text-nude-500 font-medium">Ubicación</a>
+            <a href="#reserva" onclick="toggleMobileMenu()" class="block w-full text-center luxury-bg-gradient text-white font-bold py-3 rounded-xl mt-4 text-xs uppercase tracking-widest shadow">
+                Reservar Cita
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-nude-200">
+        <!-- Background Overlay -->
+        <div class="absolute inset-0 z-0 opacity-40">
+            <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=1920" alt="Melena sana con mechas brillantes" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-r from-nude-100 via-nude-100/80 to-transparent z-0"></div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full">
+            <div class="max-w-2xl">
+                <span class="inline-block py-1.5 px-4 rounded-full border border-nude-400 bg-white/70 text-nude-800 text-xs font-semibold tracking-widest uppercase mb-6 shadow-sm">
+                    Estudio de Peluquería Femenina & Color
+                </span>
+                <h1 class="font-serif text-4xl sm:text-6xl font-bold text-nude-900 tracking-tight leading-tight mb-6">
+                    Melenas Sanas, Lumínicas y <span class="gold-gradient-text italic">Llenas de Vida</span>
+                </h1>
+                <p class="text-nude-800/80 text-base sm:text-lg max-w-xl font-normal leading-relaxed mb-8">
+                    Especialistas en decoloración respetuosa, técnicas avanzadas de Balayage, Babylights y tratamientos de regeneración capilar para un cabello radiante.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center gap-4">
+                    <a href="#reserva" class="w-full sm:w-auto luxury-bg-gradient text-white font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all uppercase tracking-widest text-xs text-center">
+                        Reservar Mi Experiencia
+                    </a>
+                    <a href="#galeria" class="w-full sm:w-auto bg-white/80 text-nude-900 border border-nude-300 font-semibold px-8 py-4 rounded-full hover:bg-white transition-all uppercase tracking-widest text-xs text-center shadow-sm">
+                        Ver Trabajos & Mechas
+                    </a>
+                </div>
+
+                <!-- Key Highlights -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-16 pt-8 border-t border-nude-300/60">
+                    <div>
+                        <i class="fa-solid fa-sparkles text-nude-500 text-lg mb-1"></i>
+                        <h4 class="font-serif font-bold text-nude-900 text-sm">Mechas de Autor</h4>
+                        <p class="text-xs text-nude-800/70">Balayage & Hair Contour</p>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-droplet text-nude-500 text-lg mb-1"></i>
+                        <h4 class="font-serif font-bold text-nude-900 text-sm">Salud Capilar</h4>
+                        <p class="text-xs text-nude-800/70">Tratamientos Orgánicos</p>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-wand-magic-sparkles text-nude-500 text-lg mb-1"></i>
+                        <h4 class="font-serif font-bold text-nude-900 text-sm">Color Protegido</h4>
+                        <p class="text-xs text-nude-800/70">Cero agresión térmica</p>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-gem text-nude-500 text-lg mb-1"></i>
+                        <h4 class="font-serif font-bold text-nude-900 text-sm">Atención Exclusiva</h4>
+                        <p class="text-xs text-nude-800/70">Asesoría de visajismo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="servicios" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-nude-500 text-xs font-bold uppercase tracking-widest block mb-2">Servicios Femeninos</span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-bold text-nude-900">Especialidades en Color & Corte</h2>
+                <div class="w-16 h-0.5 bg-nude-500 mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="bg-nude-100 p-8 rounded-3xl border border-nude-200 hover:border-nude-400 transition-all hover:shadow-lg flex flex-col justify-between group">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-serif text-xl font-bold text-nude-900 group-hover:text-nude-500 transition-colors">Balayage Signature & Gloss</h3>
+                            <span class="text-nude-500 font-bold text-xl font-serif">110€</span>
+                        </div>
+                        <p class="text-nude-800/80 text-sm mb-6 leading-relaxed">Degradado natural hecho a mano con matizador iluminador, baño de brillo y protector de enlaces para mantener el cabello 100% sano.</p>
+                    </div>
+                    <a href="#reserva" onclick="preselectService('Balayage Signature & Gloss')" class="text-nude-500 hover:text-nude-800 text-xs font-bold uppercase tracking-widest flex items-center">
+                        Reservar Servicio <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="bg-nude-100 p-8 rounded-3xl border border-nude-200 hover:border-nude-400 transition-all hover:shadow-lg flex flex-col justify-between group">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-serif text-xl font-bold text-nude-900 group-hover:text-nude-500 transition-colors">Babylights & Hair Contouring</h3>
+                            <span class="text-nude-500 font-bold text-xl font-serif">95€</span>
+                        </div>
+                        <p class="text-nude-800/80 text-sm mb-6 leading-relaxed">Reflejos ultra finos que aportan máxima luminosidad desde la raíz y enmarcan la cara según tus facciones.</p>
+                    </div>
+                    <a href="#reserva" onclick="preselectService('Babylights & Hair Contouring')" class="text-nude-500 hover:text-nude-800 text-xs font-bold uppercase tracking-widest flex items-center">
+                        Reservar Servicio <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="bg-nude-100 p-8 rounded-3xl border border-nude-200 hover:border-nude-400 transition-all hover:shadow-lg flex flex-col justify-between group">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-serif text-xl font-bold text-nude-900 group-hover:text-nude-500 transition-colors">Reconstrucción Olaplex / Bótox Capilar</h3>
+                            <span class="text-nude-500 font-bold text-xl font-serif">65€</span>
+                        </div>
+                        <p class="text-nude-800/80 text-sm mb-6 leading-relaxed">Tratamiento intensivo para sellar la cutícula, eliminar el encrespamiento y devolver la elasticidad y sedosidad inmediata.</p>
+                    </div>
+                    <a href="#reserva" onclick="preselectService('Reconstrucción Olaplex / Bótox Capilar')" class="text-nude-500 hover:text-nude-800 text-xs font-bold uppercase tracking-widest flex items-center">
+                        Reservar Servicio <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="bg-nude-100 p-8 rounded-3xl border border-nude-200 hover:border-nude-400 transition-all hover:shadow-lg flex flex-col justify-between group">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-serif text-xl font-bold text-nude-900 group-hover:text-nude-500 transition-colors">Corte de Tendencia & Peinado Glow</h3>
+                            <span class="text-nude-500 font-bold text-xl font-serif">45€</span>
+                        </div>
+                        <p class="text-nude-800/80 text-sm mb-6 leading-relaxed">Asesoría de estilo (Bob, capas, flequillo curtain), lavado sensorial, corte y peinado con ondas o liso sedoso.</p>
+                    </div>
+                    <a href="#reserva" onclick="preselectService('Corte de Tendencia & Peinado Glow')" class="text-nude-500 hover:text-nude-800 text-xs font-bold uppercase tracking-widest flex items-center">
+                        Reservar Servicio <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Service 5 -->
+                <div class="bg-nude-100 p-8 rounded-3xl border border-nude-200 hover:border-nude-400 transition-all hover:shadow-lg flex flex-col justify-between group">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-serif text-xl font-bold text-nude-900 group-hover:text-nude-500 transition-colors">Alisado de Keratina Orgánica</h3>
+                            <span class="text-nude-500 font-bold text-xl font-serif">130€</span>
+                        </div>
+                        <p class="text-nude-800/80 text-sm mb-6 leading-relaxed">Alisado libre de formol que deja la melena manejable, lisa, brillante y con movimiento natural hasta por 5 meses.</p>
+                    </div>
+                    <a href="#reserva" onclick="preselectService('Alisado de Keratina Orgánica')" class="text-nude-500 hover:text-nude-800 text-xs font-bold uppercase tracking-widest flex items-center">
+                        Reservar Servicio <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+
+                <!-- Service 6 -->
+                <div class="bg-nude-100 p-8 rounded-3xl border border-nude-200 hover:border-nude-400 transition-all hover:shadow-lg flex flex-col justify-between group">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-serif text-xl font-bold text-nude-900 group-hover:text-nude-500 transition-colors">Peinados de Novia & Eventos</h3>
+                            <span class="text-nude-500 font-bold text-xl font-serif">75€</span>
+                        </div>
+                        <p class="text-nude-800/80 text-sm mb-6 leading-relaxed">Recogidos románticos, coletas chic, semi-recogidos y ondas al agua diseñados para lucir impecables durante todo el evento.</p>
+                    </div>
+                    <a href="#reserva" onclick="preselectService('Peinados de Novia & Eventos')" class="text-nude-500 hover:text-nude-800 text-xs font-bold uppercase tracking-widest flex items-center">
+                        Reservar Servicio <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hair Care Boutique / Products -->
+    <section id="productos" class="py-24 bg-nude-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-nude-500 text-xs font-bold uppercase tracking-widest block mb-2">Boutique de Cuidado Femenino</span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-bold text-nude-900">Productos para Mantener el Pelo Sano</h2>
+                <p class="text-nude-800/70 mt-3 text-sm">Fórmulas profesionales sin sulfatos ni parabenos para prolongar la salud y el color de tu melena.</p>
+            </div>
+
+            <!-- Product Category Filters -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
+                <button onclick="filterProducts('all')" class="prod-filter-btn active luxury-bg-gradient text-white px-6 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all shadow-sm">
+                    Todos
+                </button>
+                <button onclick="filterProducts('hidratacion')" class="prod-filter-btn bg-white text-nude-800 hover:text-nude-500 border border-nude-300 px-6 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all shadow-sm">
+                    Hidratación & Brillo
+                </button>
+                <button onclick="filterProducts('mechas')" class="prod-filter-btn bg-white text-nude-800 hover:text-nude-500 border border-nude-300 px-6 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all shadow-sm">
+                    Especial Rubios & Mechas
+                </button>
+                <button onclick="filterProducts('reparacion')" class="prod-filter-btn bg-white text-nude-800 hover:text-nude-500 border border-nude-300 px-6 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all shadow-sm">
+                    Protección & Reparación
+                </button>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Dynamically generated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Lookbook / Gallery Section -->
+    <section id="galeria" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-nude-500 text-xs font-bold uppercase tracking-widest block mb-2">Inspiración & Trabajos</span>
+                <h2 class="font-serif text-3xl sm:text-5xl font-bold text-nude-900">Galería de Cortes, Mechas & Tonos</h2>
+                <p class="text-nude-800/70 mt-3 text-sm">Ejemplos reales de melenas cuidadas, con brillo espejo, mechas impecables y cortes favorecedores.</p>
+            </div>
+
+            <!-- Gallery Filter Buttons -->
+            <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10">
+                <button onclick="filterGallery('all')" class="gal-filter-btn active luxury-bg-gradient text-white px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider transition-all">
+                    Ver Todos
+                </button>
+                <button onclick="filterGallery('balayage')" class="gal-filter-btn bg-nude-100 text-nude-800 border border-nude-300 px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider hover:border-nude-500 transition-all">
+                    Balayage & Mechas
+                </button>
+                <button onclick="filterGallery('rubios')" class="gal-filter-btn bg-nude-100 text-nude-800 border border-nude-300 px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider hover:border-nude-500 transition-all">
+                    Rubios Luminosos
+                </button>
+                <button onclick="filterGallery('cobrizos')" class="gal-filter-btn bg-nude-100 text-nude-800 border border-nude-300 px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider hover:border-nude-500 transition-all">
+                    Castaños & Cobrizos
+                </button>
+                <button onclick="filterGallery('cortes')" class="gal-filter-btn bg-nude-100 text-nude-800 border border-nude-300 px-5 py-2 rounded-full text-xs font-semibold uppercase tracking-wider hover:border-nude-500 transition-all">
+                    Cortes & Peinados
+                </button>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <!-- Dynamically Rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Location & Reservation Section -->
+    <section id="contacto" class="py-24 bg-nude-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                
+                <!-- Info & Interactive Map -->
+                <div class="space-y-8">
+                    <div>
+                        <span class="text-nude-500 text-xs font-bold uppercase tracking-widest block mb-2">Tu Espacio de Belleza</span>
+                        <h2 class="font-serif text-3xl sm:text-4xl font-bold text-nude-900 mb-4">Ubicación & Contacto</h2>
+                        <p class="text-nude-800/80 text-sm">Un ambiente cálido, íntimo y relajante pensado exclusivamente para el cuidado de tu cabello.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-2xl bg-white border border-nude-300 flex items-center justify-center text-nude-500 flex-shrink-0 shadow-sm">
+                                <i class="fa-solid fa-location-dot text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-serif font-bold text-nude-900">Dirección del Estudio</h4>
+                                <p class="text-nude-800/80 text-sm">Calle Recogidas 14, Planta 1, 18002 Granada, España</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-2xl bg-white border border-nude-300 flex items-center justify-center text-nude-500 flex-shrink-0 shadow-sm">
+                                <i class="fa-solid fa-clock text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-serif font-bold text-nude-900">Horario de Atención</h4>
+                                <p class="text-nude-800/80 text-sm">Lunes a Viernes: 10:00 - 20:00 hs</p>
+                                <p class="text-nude-800/80 text-sm">Sábados: 09:00 - 14:00 hs</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 rounded-2xl bg-white border border-nude-300 flex items-center justify-center text-nude-500 flex-shrink-0 shadow-sm">
+                                <i class="fa-solid fa-phone text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-serif font-bold text-nude-900">Reservas Directas</h4>
+                                <p class="text-nude-800/80 text-sm">+34 958 222 333 / +34 611 223 344</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map Container -->
+                    <div class="rounded-3xl overflow-hidden border border-nude-300 h-64 w-full shadow-sm" id="map"></div>
+                </div>
+
+                <!-- Booking Form -->
+                <div id="reserva" class="bg-white p-8 sm:p-10 rounded-3xl border border-nude-300 shadow-xl">
+                    <h3 class="font-serif text-2xl sm:text-3xl font-bold text-nude-900 mb-2">Reserva tu Cita Online</h3>
+                    <p class="text-nude-800/70 text-xs sm:text-sm mb-6">Selecciona el tratamiento que deseas y la fecha. Te confirmaremos disponibilidad por WhatsApp.</p>
+
+                    <form id="booking-form" onsubmit="handleBooking(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-nude-800 mb-1">Nombre Completo</label>
+                            <input type="text" required placeholder="Ej. Elena Gómez" class="w-full bg-nude-100 border border-nude-300 rounded-xl px-4 py-3 text-nude-900 focus:outline-none focus:border-nude-500 transition-colors text-sm">
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-nude-800 mb-1">Teléfono / WhatsApp</label>
+                                <input type="tel" required placeholder="+34 600 000 000" class="w-full bg-nude-100 border border-nude-300 rounded-xl px-4 py-3 text-nude-900 focus:outline-none focus:border-nude-500 transition-colors text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-nude-800 mb-1">Correo Electrónico</label>
+                                <input type="email" required placeholder="elena@ejemplo.com" class="w-full bg-nude-100 border border-nude-300 rounded-xl px-4 py-3 text-nude-900 focus:outline-none focus:border-nude-500 transition-colors text-sm">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-nude-800 mb-1">Servicio o Tratamiento</label>
+                            <select id="booking-service" required class="w-full bg-nude-100 border border-nude-300 rounded-xl px-4 py-3 text-nude-900 focus:outline-none focus:border-nude-500 transition-colors text-sm">
+                                <option value="">Selecciona una opción</option>
+                                <option value="Balayage Signature & Gloss">Balayage Signature & Gloss - 110€</option>
+                                <option value="Babylights & Hair Contouring">Babylights & Hair Contouring - 95€</option>
+                                <option value="Reconstrucción Olaplex / Bótox Capilar">Reconstrucción Olaplex / Bótox Capilar - 65€</option>
+                                <option value="Corte de Tendencia & Peinado Glow">Corte de Tendencia & Peinado Glow - 45€</option>
+                                <option value="Alisado de Keratina Orgánica">Alisado de Keratina Orgánica - 130€</option>
+                                <option value="Peinados de Novia & Eventos">Peinados de Novia & Eventos - 75€</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-nude-800 mb-1">Fecha Deseada</label>
+                                <input type="date" id="booking-date" required class="w-full bg-nude-100 border border-nude-300 rounded-xl px-4 py-3 text-nude-900 focus:outline-none focus:border-nude-500 transition-colors text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-nude-800 mb-1">Horario Preferido</label>
+                                <select required class="w-full bg-nude-100 border border-nude-300 rounded-xl px-4 py-3 text-nude-900 focus:outline-none focus:border-nude-500 transition-colors text-sm">
+                                    <option value="">Selecciona hora</option>
+                                    <option value="10:00">10:00 hs</option>
+                                    <option value="12:00">12:00 hs</option>
+                                    <option value="16:00">16:00 hs</option>
+                                    <option value="18:00">18:00 hs</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-nude-800 mb-1">Notas sobre tu cabello (Opcional)</label>
+                            <textarea rows="3" placeholder="Cuéntanos sobre tu melena (largo, procesos químicos previos, tinte actual...)" class="w-full bg-nude-100 border border-nude-300 rounded-xl px-4 py-3 text-nude-900 focus:outline-none focus:border-nude-500 transition-colors resize-none text-sm"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full luxury-bg-gradient text-white font-bold py-4 rounded-xl shadow-md hover:shadow-lg transition-all uppercase tracking-widest text-xs mt-4">
+                            Confirmar Solicitud de Cita
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-nude-900 text-nude-200 pt-16 pb-8 border-t border-nude-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+                
+                <!-- Brand Info -->
+                <div class="space-y-4 md:col-span-1">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-full border-2 border-nude-400 bg-nude-800 flex items-center justify-center">
+                            <span class="font-serif text-nude-300 font-bold text-lg">L</span>
+                        </div>
+                        <span class="font-serif text-xl font-bold tracking-widest text-white">LUMIÈRE</span>
+                    </div>
+                    <p class="text-nude-300/70 text-xs leading-relaxed">
+                        Estudio de alta peluquería femenina dedicado a la creación de melenas luminosas, sanas y cuidadas mediante productos orgánicos y vanguardia técnica.
+                    </p>
+                </div>
+
+                <!-- Navigation -->
+                <div>
+                    <h4 class="text-white font-serif font-bold mb-4 text-sm tracking-wider">Enlaces Rápidos</h4>
+                    <ul class="space-y-2 text-xs text-nude-300/80">
+                        <li><a href="#inicio" class="hover:text-nude-400 transition-colors">Inicio</a></li>
+                        <li><a href="#servicios" class="hover:text-nude-400 transition-colors">Servicios & Mechas</a></li>
+                        <li><a href="#productos" class="hover:text-nude-400 transition-colors">Cuidado Capilar</a></li>
+                        <li><a href="#galeria" class="hover:text-nude-400 transition-colors">Galería de Looks</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal Links -->
+                <div>
+                    <h4 class="text-white font-serif font-bold mb-4 text-sm tracking-wider">Legal</h4>
+                    <ul class="space-y-2 text-xs text-nude-300/80">
+                        <li><a href="#" class="hover:text-nude-400 transition-colors">Aviso Legal</a></li>
+                        <li><a href="#" class="hover:text-nude-400 transition-colors">Política de Privacidad</a></li>
+                        <li><a href="#" class="hover:text-nude-400 transition-colors">Política de Cookies</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Media -->
+                <div>
+                    <h4 class="text-white font-serif font-bold mb-4 text-sm tracking-wider">Síguenos</h4>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-9 h-9 rounded-full bg-nude-800 flex items-center justify-center text-nude-300 hover:text-white hover:bg-nude-500 transition-all">
+                            <i class="fa-brands fa-instagram text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-nude-800 flex items-center justify-center text-nude-300 hover:text-white hover:bg-nude-500 transition-all">
+                            <i class="fa-brands fa-facebook-f text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-nude-800 flex items-center justify-center text-nude-300 hover:text-white hover:bg-nude-500 transition-all">
+                            <i class="fa-brands fa-pinterest-p text-sm"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-nude-800 pt-8 text-center text-xs text-nude-400/60">
+                <p>&copy; 2026 LUMIÈRE Studio Femenino. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Modal -->
+    <div id="cart-modal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex justify-end">
+        <div class="bg-white w-full max-w-md h-full flex flex-col justify-between border-l border-nude-300 shadow-2xl p-6">
+            <div>
+                <div class="flex items-center justify-between pb-4 border-b border-nude-200">
+                    <h3 class="font-serif text-xl font-bold text-nude-900 flex items-center">
+                        <i class="fa-solid fa-bag-shopping text-nude-500 mr-3"></i> Tu Selección Capilar
+                    </h3>
+                    <button onclick="toggleCartModal()" class="text-nude-800 hover:text-nude-500 p-2">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <div id="cart-items" class="py-4 space-y-4 overflow-y-auto max-h-[60vh] custom-scrollbar">
+                    <!-- Dynamic Cart Items -->
+                </div>
+            </div>
+
+            <div class="pt-4 border-t border-nude-200">
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-nude-800 text-sm font-semibold">Total:</span>
+                    <span id="cart-total" class="text-2xl font-bold text-nude-500 font-serif">0.00€</span>
+                </div>
+                <button onclick="checkout()" class="w-full luxury-bg-gradient text-white font-bold py-3.5 rounded-xl hover:shadow-lg transition-all uppercase tracking-widest text-xs">
+                    Realizar Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal for Gallery -->
+    <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden items-center justify-center p-4">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-3xl hover:text-nude-400 z-50">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="max-w-4xl max-h-[90vh] relative text-center">
+            <img id="lightbox-img" src="" alt="Trabajo realizado" class="max-w-full max-h-[75vh] rounded-2xl object-contain mx-auto border border-nude-400/30">
+            <h4 id="lightbox-title" class="text-white font-serif text-xl mt-4 font-semibold"></h4>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-nude-900 text-white px-6 py-3.5 rounded-2xl shadow-2xl text-xs font-semibold transform translate-y-20 opacity-0 transition-all duration-300 flex items-center space-x-3">
+        <i class="fa-solid fa-sparkles text-nude-400"></i>
+        <span id="toast-msg">Notificación</span>
+    </div>
+
+    <!-- Leaflet JS for Map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // --- DATA DE PRODUCTOS Y GALERÍA 100% FEMENINA ---
+        const productsData = [
+            {
+                id: 1,
+                name: 'Aceite de Argán & Seda Elixir',
+                category: 'hidratacion',
+                price: 28.50,
+                image: 'https://images.unsplash.com/photo-1608248597560-841f22e86121?auto=format&fit=crop&q=80&w=500',
+                desc: 'Nutrición inmediata para puntas secas, aporta brillo espejo y tacto sedoso.'
+            },
+            {
+                id: 2,
+                name: 'Champú Purple Gloss Neutralizador',
+                category: 'mechas',
+                price: 22.00,
+                image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&q=80&w=500',
+                desc: 'Elimina reflejos amarillos no deseados en rubios, babylights y canas.'
+            },
+            {
+                id: 3,
+                name: 'Mascarilla Reconstructora Plex',
+                category: 'reparacion',
+                price: 34.00,
+                image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=500',
+                desc: 'Repara enlaces rotos por decoloración o uso excesivo de planchas.'
+            },
+            {
+                id: 4,
+                name: 'Sérum Protector Térmico & UV',
+                category: 'reparacion',
+                price: 25.00,
+                image: 'https://images.unsplash.com/photo-1597354984706-fac992d9306f?auto=format&fit=crop&q=80&w=500',
+                desc: 'Protege contra el calor hasta 230°C y bloquea el encrespamiento por humedad.'
+            }
+        ];
+
+        const galleryData = [
+            {
+                id: 1,
+                title: 'Balayage Beige & Blonde con Brillo Espejo',
+                category: 'balayage',
+                image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=800'
+            },
+            {
+                id: 2,
+                title: 'Corte Bob Desfilado & Rubio Platino Frío',
+                category: 'rubios',
+                image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&q=80&w=800'
+            },
+            {
+                id: 3,
+                title: 'Tono Warm Copper / Cobrizo Luminoso',
+                category: 'cobrizos',
+                image: 'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&q=80&w=800'
+            },
+            {
+                id: 4,
+                title: 'Babylights Doradas en Melena Larga',
+                category: 'balayage',
+                image: 'https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&q=80&w=800'
+            },
+            {
+                id: 5,
+                title: 'Corte Long Bob con Ondas Glamour',
+                category: 'cortes',
+                image: 'https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&q=80&w=800'
+            },
+            {
+                id: 6,
+                title: 'Castaño Chocolate Gloss & Capas Invisibles',
+                category: 'cobrizos',
+                image: 'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?auto=format&fit=crop&q=80&w=800'
+            }
+        ];
+
+        let cart = [];
+
+        window.onload = function() {
+            renderProducts(productsData);
+            renderGallery(galleryData);
+            initMap();
+            setMinDate();
+        };
+
+        // --- RENDERIZADO DE PRODUCTOS ---
+        function renderProducts(items) {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = items.map(product => `
+                <div class="bg-white rounded-3xl overflow-hidden border border-nude-300 hover:shadow-xl transition-all flex flex-col justify-between group">
+                    <div class="relative overflow-hidden h-56">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-nude-800 text-[10px] px-3 py-1 rounded-full border border-nude-200 uppercase font-bold tracking-widest">
+                            ${product.category}
+                        </span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-serif text-lg font-bold text-nude-900 mb-1">${product.name}</h4>
+                            <p class="text-nude-800/70 text-xs leading-relaxed mb-4">${product.desc}</p>
+                        </div>
+                        <div>
+                            <div class="text-xl font-bold text-nude-500 font-serif mb-4">${product.price.toFixed(2)}€</div>
+                            <button onclick="addToCart(${product.id})" class="w-full bg-nude-100 hover:bg-nude-500 hover:text-white text-nude-900 text-xs font-bold py-3 rounded-xl transition-all uppercase tracking-wider flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-cart-plus"></i>
+                                <span>Añadir al Carrito</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterProducts(category) {
+            document.querySelectorAll('.prod-filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'luxury-bg-gradient', 'text-white');
+                btn.classList.add('bg-white', 'text-nude-800');
+            });
+            event.target.classList.add('active', 'luxury-bg-gradient', 'text-white');
+            event.target.classList.remove('bg-white', 'text-nude-800');
+
+            if (category === 'all') {
+                renderProducts(productsData);
+            } else {
+                const filtered = productsData.filter(p => p.category === category);
+                renderProducts(filtered);
+            }
+        }
+
+        // --- RENDERIZADO DE GALERÍA Y LIGHTBOX ---
+        function renderGallery(items) {
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = items.map(item => `
+                <div onclick="openLightbox('${item.image}', '${item.title}')" class="relative group cursor-pointer overflow-hidden rounded-3xl border border-nude-300 h-80 shadow-sm">
+                    <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-nude-900/80 via-nude-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <h4 class="font-serif text-base font-bold text-white">${item.title}</h4>
+                        <span class="text-nude-300 text-xs uppercase tracking-widest mt-1">Ver Detalle <i class="fa-solid fa-expand ml-1"></i></span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterGallery(category) {
+            document.querySelectorAll('.gal-filter-btn').forEach(btn => {
+                btn.classList.remove('active', 'luxury-bg-gradient', 'text-white');
+                btn.classList.add('bg-nude-100', 'text-nude-800');
+            });
+            event.target.classList.add('active', 'luxury-bg-gradient', 'text-white');
+            event.target.classList.remove('bg-nude-100', 'text-nude-800');
+
+            if (category === 'all') {
+                renderGallery(galleryData);
+            } else {
+                const filtered = galleryData.filter(g => g.category === category);
+                renderGallery(filtered);
+            }
+        }
+
+        function openLightbox(image, title) {
+            document.getElementById('lightbox-img').src = image;
+            document.getElementById('lightbox-title').innerText = title;
+            const modal = document.getElementById('lightbox-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightbox-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // --- CARRITO ---
+        function addToCart(productId) {
+            const product = productsData.find(p => p.id === productId);
+            const cartItem = cart.find(item => item.id === productId);
+
+            if (cartItem) {
+                cartItem.quantity++;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartUI();
+            showToast(`Añadido: ${product.name}`);
+        }
+
+        function updateCartUI() {
+            const totalCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+            document.getElementById('cart-count').innerText = totalCount;
+            document.getElementById('cart-count-mobile').innerText = totalCount;
+
+            const cartContainer = document.getElementById('cart-items');
+            if (cart.length === 0) {
+                cartContainer.innerHTML = '<p class="text-center text-nude-800/60 py-8 text-xs">Tu bolsa de productos está vacía</p>';
+            } else {
+                cartContainer.innerHTML = cart.map(item => `
+                    <div class="flex items-center justify-between bg-nude-100 p-3 rounded-2xl border border-nude-200">
+                        <img src="${item.image}" class="w-12 h-12 object-cover rounded-xl">
+                        <div class="flex-1 ml-3">
+                            <h5 class="text-nude-900 text-xs font-semibold leading-tight">${item.name}</h5>
+                            <span class="text-nude-500 text-xs font-bold font-serif">${item.price.toFixed(2)}€ x ${item.quantity}</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="changeQty(${item.id}, -1)" class="w-6 h-6 rounded-lg bg-white border border-nude-300 text-nude-900 flex items-center justify-center text-xs font-bold">-</button>
+                            <button onclick="changeQty(${item.id}, 1)" class="w-6 h-6 rounded-lg bg-white border border-nude-300 text-nude-900 flex items-center justify-center text-xs font-bold">+</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            const totalPrice = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            document.getElementById('cart-total').innerText = `${totalPrice.toFixed(2)}€`;
+        }
+
+        function changeQty(productId, delta) {
+            const item = cart.find(p => p.id === productId);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(p => p.id !== productId);
+                }
+            }
+            updateCartUI();
+        }
+
+        function toggleCartModal() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                showToast('Selecciona productos antes de continuar');
+                return;
+            }
+            showToast('¡Gracias! Pedido registrado correctamente');
+            cart = [];
+            updateCartUI();
+            toggleCartModal();
+        }
+
+        // --- RESERVA Y NAVEGACIÓN ---
+        function preselectService(serviceName) {
+            const select = document.getElementById('booking-service');
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value.includes(serviceName)) {
+                    select.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        function handleBooking(e) {
+            e.preventDefault();
+            showToast('¡Cita solicitada! Te confirmaremos por WhatsApp.');
+            document.getElementById('booking-form').reset();
+        }
+
+        function setMinDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('booking-date').min = today;
+        }
+
+        // --- MAPA INTERACTIVO (LEAFLET) ---
+        function initMap() {
+            const lat = 37.1735;
+            const lng = -3.6000;
+
+            const map = L.map('map', {
+                zoomControl: false
+            }).setView([lat, lng], 16);
+
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap',
+                maxZoom: 19
+            }).addTo(map);
+
+            const customIcon = L.divIcon({
+                className: 'custom-map-pin',
+                html: `<div class="w-8 h-8 rounded-full luxury-bg-gradient flex items-center justify-center text-white shadow-lg border-2 border-white"><i class="fa-solid fa-heart text-xs"></i></div>`,
+                iconSize: [32, 32],
+                iconAnchor: [16, 32]
+            });
+
+            L.marker([lat, lng], { icon: customIcon }).addTo(map)
+                .bindPopup('<b style="color: #4A342B;">LUMIÈRE Studio Femenino</b><br>Calle Recogidas 14')
+                .openPopup();
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
